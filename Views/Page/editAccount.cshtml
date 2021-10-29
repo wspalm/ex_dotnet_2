@@ -1,0 +1,49 @@
+<div id='app1'>
+     <div class="form-group">
+
+        <label>Account ID</label>
+        <input readonly class="form-control" v-model="act_obj.targetActNo"/>
+        <label>Bank Account No</label>
+        <input class="form-control" v-model="act_obj.newBankAccountNo"/>
+        <label>Customer ID</label>
+        <input class="form-control" v-model="act_obj.newCustomerId"/>
+        <label>Balance</label>
+        <input class="form-control" v-model="act_obj.balance"/>
+        <label>Account Type</label>
+        <select class="form-control" v-model="act_obj.newAccountTypeId">
+                <option :value="x.accountTypeId" v-for="x in list1">
+                    {{x.accountTypeName}}
+                </option>
+        </select>
+
+    </div>
+    <br>
+    <button @@click="save_act()" class="btn btn-button btn-outline-primary">Save Change</button>
+
+</div>
+
+@section scripts {
+    <script>
+        var component = {
+            el: '#app1',
+            data: {
+                act_obj: {
+                    targetActNo: 0,
+                    newBankAccountNo: 0,
+                    newCustomerId: 0,
+                    balance: 0,
+                    newAccountTypeId: 0,
+                },//end of act_obj
+                list1: [],
+            },//end of data
+            methods: {
+
+            },//end of method
+            created(){
+                this.act_obj = @Html.Raw(Json.Serialize(@ViewBag.act_obj));
+                this.list1 = @Html.Raw(Json.Serialize(@ViewBag.list1));
+            },//end of created
+        };
+        var vuejs = new Vue(component);
+    </script>
+}

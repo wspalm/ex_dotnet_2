@@ -1,0 +1,76 @@
+<div id="app1">
+    <h3 align="center">Account List</h3>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Bank Account ID</th>
+                <th>Customer Name</th>
+                <th>Bank Account No</th>
+                <th>Balance</th>
+                <th>Account Type</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tr v-for="i in list1">
+            <td>{{i.bankAccountId}}</td>
+            <td>{{i.customerName}}</td>
+            <td>{{i.bankAccountNo}}</td>
+            <td>{{i.balance}}</td>
+            <td>{{i.accountTypeName}}</td>
+            <td>{{i.statusName}}</td>
+        </tr>
+    </table>
+    <br><hr>
+    <div class="form-group">
+        <label>From Accouont (Account Number)</label>
+        <input class="form-control" v-model="transfer_obj.fromAct"/>
+        <label>Target Accouont (Account Number)</label>
+        <input class="form-control" v-model="transfer_obj.targetAct"/>
+        <label>Balance</label>
+        <input class="form-control" v-model="transfer_obj.amount"/>
+        <br>
+        <div align="center">
+        <button class="btn btn-button btn-outline-success" @@click="transfer()">Transfer</button>
+        </div>
+    </div>
+</div>
+<!--
+bankAccountId = act.bankAccountId,
+customerName = act.customer.customerName,
+bankAccountNo = act.bankAccountNo,
+balance = act.balance,
+accountTypeName = act.accountType.accountTypeName,
+statusName = act.customer.status.statusName,
+-->
+
+@section scripts {
+    <script>
+        var component = {
+            el: '#app1',
+            data: {
+                list1: [],
+                transfer_obj: {
+                    fromAct: 0,
+                    targetAct: 0,
+                    amount: 0,
+                },//end of obj
+            },//end of data
+            methods: {
+                async transfer(){
+                    var url = '/api/transaction/transferAdmin';
+                    var result = await axios.post(url, this.transfer_obj);
+                    location.reload();
+                    console.log(this.transfer_obj);
+                },//end of function
+            },//end of methods
+            async created(){
+                var url = '/api/bank/getBankAccount';
+                var result = await axios.get(url);
+                this.list1 = result.data;
+                console.log(result.data);
+                console.log(this.list1);
+            },//end of created
+        };//end of component
+        var vueJs = new Vue(component);
+    </script>
+}

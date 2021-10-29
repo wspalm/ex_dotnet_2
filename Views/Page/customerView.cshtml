@@ -1,0 +1,132 @@
+<div id="app1">
+    <h3 align="center">Customer Information</h3><br>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>PhoneNumber</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tr v-for="i in customer_list">
+            <td>{{i.customerId}}</td>
+            <td>{{i.customerName}}</td>
+            <td>{{i.phoneNumber}}</td>
+            <td>{{i.statusName}}</td>
+        </tr>
+    </table>
+    <hr><br>
+    <h3 align="center">Customer Bank Account</h3><br>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Bank Account ID</th>
+                <th>Bank Account No</th>
+                <th>Balance</th>
+                <th>Account Type</th>
+            </tr>
+        </thead>
+        <tr v-for=" x in account_list">
+            <td>{{x.bankAccountId}}</td>
+            <td>{{x.bankAccountNo}}</td>
+            <td>{{x.balance}}</td>
+            <td>{{x.accountType}}</td>
+        </tr>
+    </table>
+    <br><hr>
+    <h4 align="center">Deposit</h4>
+    <div class="form-group">
+        <label>Target Account No</label>
+        <input class="form-control" v-model="deposit_obj.targetAct"/>
+        <label>Amount</label>
+        <input class="form-control" v-model="deposit_obj.amount"/><br>
+            <button class="btn btn-outline-success" @@click="deposit()">Deposit</button>
+
+    </div>
+    <hr>
+    <hr>
+    <h4 align="center">WithDraw</h4>
+    <div class="form-group">
+        <label>Target Account No</label>
+        <input class="form-control" v-model="withdraw_obj.targetAct"/>
+        <label>Amount</label>
+        <input class="form-control" v-model="withdraw_obj.amount"/><br>
+            <button class="btn btn-outline-warning" @@click="withdraw()">WithDraw</button>
+
+    </div>
+    <hr>
+    <hr>
+    <h4 align="center">Transfer</h4>
+    <div class="form-group">
+        <label>From Account No</label>
+        <input class="form-control" v-model="transfer_obj.fromAct"/>
+        <label>Target Account No</label>
+        <input class="form-control" v-model="transfer_obj.targetAct"/>
+        <label>Amount</label>
+        <input class="form-control" v-model="transfer_obj.amount"/><br>
+            <button class="btn btn-outline-primary" @@click="transfer()">Transfer</button>
+
+    </div>
+    <hr>
+    <hr>
+</div>
+
+@section scripts {
+    <script>
+        var component = {
+            el: '#app1',
+            data: {
+                account_list: [],
+                customer_list: [],
+                deposit_obj: {
+                    targetAct: 0,
+                    amount: 0,
+                },
+                withdraw_obj: {
+                    targetAct: 0,
+                    amount: 0,
+                },
+                transfer_obj: {
+                    fromAct: 0,
+                    targetAct: 0,
+                    amount: 0,
+                },
+            },//end of data
+            methods: {
+                async deposit(){
+                    var url = '/api/transaction/DepositCustomer/';
+                    var result = await axios.post(url , this.deposit_obj);
+                    console.log(result.data);
+                    await alert(result.data.code + " : " + result.data.message + " : " 
+                    + result.data.data);
+                    location.reload();
+                },//end of deposit
+                async withdraw(){
+                    var url = '/api/transaction/WithDrawCustomer/';
+                    var result = await axios.post(url , this.withdraw_obj);
+                    console.log(result.data);
+                    await alert(result.data.code + " : " + result.data.message + " : " 
+                    + result.data.data);
+                    location.reload();
+                },//end of withdraw
+                async transfer(){
+                    var url = '/api/transaction/TransferCustomer/';
+                    var result = await axios.post(url , this.transfer_obj);
+                    console.log(result.data);
+                    await alert(result.data.code + " : " + result.data.message + " : " 
+                    + result.data.data);
+                    location.reload();
+                },//end of transfer
+
+            },//end methods
+            created(){
+                this.customer_list = @Html.Raw(Json.Serialize(@ViewBag.customer_list));
+                this.account_list = @Html.Raw(Json.Serialize(@ViewBag.account_list));
+                console.log(this.customer_list);
+                console.log(this.account_list);
+            },//end of created
+        };
+        var vueJs = new Vue(component);
+    </script>
+}

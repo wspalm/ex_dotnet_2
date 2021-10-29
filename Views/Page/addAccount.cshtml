@@ -1,0 +1,81 @@
+<div id="app1">
+    <h3 align="center">Choose Customer</h3><br>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>PhoneNumber</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tr v-for="s in customer_list">
+            <td>{{s.customerId}}</td>
+            <td>{{s.customerName}}</td>
+            <td>{{s.phoneNumber}}</td>
+            <td>{{s.status}}</td>
+        </tr>
+    </table>
+    <br>
+    <hr>
+    <br>
+    <h2 align="center">Choose Customer</h2><br>
+    <div class="form-group">
+        <label>Bank Account no</label>
+        <input class="form-control" v-model="sending_obj.bankActNo"/>
+        <label>Customer ID</label>
+        <input class="form-control" v-model="sending_obj.customerId"/>
+        <label>Balance</label>
+        <input class="form-control" v-model="sending_obj.balance"/>
+        <label>Choose Account Type</label>
+        <select class="form-control" v-model="sending_obj.accountTypeId">
+                                    
+                <option :value="s.accountTypeId" v-for="s in account_types">
+                    {{s.accountTypeName}}
+                </option>
+        </select>
+    </div>
+    <br>
+    <button @@click="_save()" class="btn btn-button btn-outline-primary">Save Change</button>
+</div>
+
+@section scripts {
+    <script>
+        var component = {
+            el: '#app1',
+            data: {
+                customer_list: [],
+                account_types: [],
+                ////////////
+                sending_obj: {
+                    bankActNo: 0,
+                    customerId: 0,
+                    balance: 0,
+                    accountTypeId: 0,
+                },//end of sending obj
+            },//end of data
+            methods: {
+                async _save(){
+                    console.log(this.sending_obj);
+                    var url = '/api/bank/addAccount'
+                    var result = await axios.post(url , this.sending_obj);
+                    window.location = "/page/bankadmin";
+                    console.log(result.data);
+                },//end of function
+            },//end of methods
+            async created(){
+                var url = '/api/bank/getCustomer';
+                var url2 = '/api/bank/getAccountTypes';
+
+                var result = await axios.get(url);
+                var result2 = await axios.get(url2);
+                this.customer_list = result.data;
+                this.account_types = result2.data;
+
+                console.log(this.customer_list);
+                console.log(this.account_types);
+            },//created 
+        };//end of component
+        var vuejs_ = new Vue(component);
+    </script>
+}

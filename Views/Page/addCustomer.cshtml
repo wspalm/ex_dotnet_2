@@ -1,0 +1,46 @@
+<div id="app1">
+    <h3 align="center">Customer Registration</h3>
+    <br>
+    <div class="form-group">
+        <label>FirstName</label>
+        <input class="form-control" v-model="sending_obj.customerName" />
+        <label>PhoneNumber</label>
+        <input class="form-control" v-model="sending_obj.phoneNumber" />
+        <br>
+        <select class="form-control" v-model="sending_obj.statusTypeId">
+            <option :value="i.statusId" v-for="i in list1">
+                {{i.statusName}}
+            </option>
+        </select>
+    </div>
+    <button @@click="register()" class="btn btn-button btn-outline-primary">Register</button>
+</div>
+
+@section scripts{
+     
+    <script>
+        var component = {
+            el: "#app1",
+            data:{
+                list1: [],
+                sending_obj: {
+                    customerName: '',
+                    phoneNumber: 0,
+                    statusTypeId: 0,
+                },//end of sending obj
+            },//end of data
+            methods:{
+                async register(){
+                    var url = '/api/bank/addCustomer';
+                    var result = await axios.post(url,this.sending_obj);
+                    console.log(result);
+                    window.location = "/page/bankadmin";
+                },//end of functin register
+            },//end of methods
+            created(){
+                this.list1 = @Html.Raw(Json.Serialize(@ViewBag.typeList));
+            }//end of function created
+        };
+        var vuejs2 = new Vue(component);
+    </script>
+}

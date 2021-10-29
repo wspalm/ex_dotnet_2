@@ -1,0 +1,69 @@
+<div id="app1">
+    <h3 align="center">List of Bank Account</h3>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Bank Account ID</th>
+                <th>Customer Name</th>
+                <th>Bank Account No</th>
+                <th>Balance</th>
+                <th>Account Type Name</th>
+                <th>Status Name</th>
+            </tr>
+        </thead>
+            <tr v-for=" i in bankAccount_list">
+                <td>{{i.bankAccountId}}</td>
+                <td>{{i.customerName}}</td>
+                <td>{{i.bankAccountNo}}</td>
+                <td>{{i.balance}}</td>
+                <td>{{i.accountTypeName}}</td>
+                <td>{{i.statusName}}</td>
+            </tr>            
+    </table>
+    <hr><br>
+    <h3 align="center">Deposit</h3>
+    <div class="form-group">
+        <label>Bank Account No</label>
+        <input class="form-control" v-model="withdraw_.targetAct"/>
+    </div>
+    <div class="form-group">
+        <label>Amount</label>
+        <input class="form-control" v-model="withdraw_.amount"/>
+    </div>
+    <div align="center">   
+    <button @@click="withdraw()" class="btn btn-button btn-outline-warning">WithDraw</button>
+    </div>
+</div>
+
+
+
+
+@section scripts {
+    <script>
+        var component = {
+            el: "#app1",
+            data: {
+                bankAccount_list: [],
+                withdraw_: {
+                    targetAct: 0,
+                    amount: 0,
+                },
+            },//end of data
+            methods: {
+                async withdraw(){
+                    var url = '/api/transaction/withDrawAdmin';
+                    var result = await axios.post(url , this.withdraw_);
+                    console.log(this.withdraw_);
+                    location.reload();
+                },//end of deposit
+            },//end of methods
+            async created(){
+                var url = '/api/bank/getBankAccount';
+                var result = await axios.get(url);
+                this.bankAccount_list = result.data;
+                console.log(this.bankAccount_list);
+            },//end of created
+        };//end of component
+        var vueJs_ = new Vue(component);
+    </script>
+}

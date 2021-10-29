@@ -1,0 +1,43 @@
+<div id="app1">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>PhoneNumber</th>
+                <th>Status</th>
+                <th>Enter</th>
+            </tr>
+        </thead>
+            <tr v-for=" i in list1 ">
+                <td>{{i.customerId}}</td>
+                <td>{{i.customerName}}</td>
+                <td>{{i.phoneNumber}}</td>
+                <td>{{i.status.statusName}}</td>
+                <td><button class="btn btn-outline-primary" @@click="enter_(i)">Enter</button></td>
+            </tr>
+    </table>
+</div>
+
+@section scripts{
+
+    <script>
+        var component = {
+            el: '#app1',
+            data: {
+                list1: [],
+            },
+            methods: {
+                enter_(i){
+                    window.location = '/page/customerViewing/' + i.customerId;
+                    console.log(i.customerId);
+                },//end of function
+            },
+            created(){
+                this.list1 = @Html.Raw(Json.Serialize(@ViewBag.list1));
+            },
+        };
+        var vuejs = new Vue(component);
+    </script>
+
+}

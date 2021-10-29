@@ -1,0 +1,56 @@
+<div id="app1">
+    <div class="form-group">
+
+        <label>Customer ID</label>
+        <input readonly class="form-control" v-model="customer_obj.targetCustomerId"/>
+        <label>Customer Name</label>
+        <input class="form-control" v-model="customer_obj.newCustomerName"/>
+        <label>Customer Phone</label>
+        <input class="form-control" v-model="customer_obj.newCustomerPhone"/>
+        <label>Choose Status</label>
+
+        <select class="form-control" v-model="customer_obj.newStatus">
+                <option :value="x.statusId" v-for="x in StatusList">
+                    {{x.statusName}}
+                </option>
+        </select>
+
+    </div>
+    <br>
+    <button @@click="save()" class="btn btn-button btn-outline-primary">Save Change</button>
+</div>
+@section scripts{
+    <script>
+        var component = {
+            el: '#app1',
+            data:{
+                idValue: 0,
+                StatusList: [],      
+
+                customer_obj: {
+                    targetCustomerId: 0,
+                    newCustomerName: '',
+                    newCustomerPhone: 0,
+                    newStatus: 0,
+                },//end of customer obj
+            },//end of data
+            methods:{
+                async save(){
+                    console.log(this.customer_obj);
+                    
+                    var url = '/api/bank/editCustomer';
+                    var result = await axios.post(url,this.customer_obj);
+                    console.log(result.data);
+                    window.location = "/page/bankadmin";
+                },//end of save function                
+            },//end of methods
+            created(){
+                this.customer_obj = @Html.Raw(Json.Serialize(@ViewBag.customer));
+                this.StatusList = @Html.Raw(Json.Serialize(@ViewBag.statList));
+                console.log(this.customer_obj);
+                console.log(this.StatusList);
+            },//end of created function
+        };//end of component
+        var vuejs3 = new Vue(component);
+    </script>
+}
